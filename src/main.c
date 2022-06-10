@@ -18,6 +18,7 @@ Trabalho 03 - Partículas
 #include "transformation.h"
 #include "matrix.h"
 #include "surface.h"
+#include "particle.h"
 #include "window.h"
 
 int main(int argc, char** argv)
@@ -25,9 +26,9 @@ int main(int argc, char** argv)
   srand(time(NULL));
   glutInit(&argc, argv);
 
-  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-  glutInitWindowSize(700, 700);
-  glutCreateWindow("Superficies");
+  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH | GLUT_RGBA);
+  glutInitWindowSize(1000, 1000);
+  glutCreateWindow("Particulas");
 
   init();
 
@@ -36,6 +37,7 @@ int main(int argc, char** argv)
   glutMotionFunc(motion);
   glutMouseFunc(mouse);
   glutDisplayFunc(display);
+  glutIdleFunc(idle);
   createGLUTMenus();
 
   glutMainLoop();

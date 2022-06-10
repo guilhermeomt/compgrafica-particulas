@@ -9,11 +9,13 @@ Trabalho 03 - Partículas
 
 static void init(void)
 {
-  glClearColor(1.0, 1.0, 1.0, 0.0);
+  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_MAP2_VERTEX_3);
   glEnable(GL_AUTO_NORMAL);
   glMapGrid2f(20, 0.0, 1.0, 20, 0.0, 1.0);
+
+  initParticles();
 }
 
 void display(void)
@@ -27,6 +29,8 @@ void display(void)
     showControlPointsPolygon(pControl);  // mostrando valuess de controle
     drawSurface();                   // disenhando un objeto
   }
+
+  drawParticles();
   glutSwapBuffers();
 }
 
@@ -194,6 +198,10 @@ void keyboard(int key, int x, int y)
     multMatrix();
     glutPostRedisplay();
   }
+}
+
+void idle(void) {
+  glutPostRedisplay();
 }
 
 void processMenuEvents(int option)
