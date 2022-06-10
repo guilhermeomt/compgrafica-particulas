@@ -13,11 +13,12 @@ Trabalho 03 - Partículas
 
 #define TIME_STEP 0.1
 
-#define MAX_PARTICLES 10000
+#define MAX_PARTICLES 100
 #define random() ((float) rand()/ RAND_MAX)
 
 GLfloat ASPECTO, ANGULO;
 GLfloat obsX, obsY, obsZ;
+GLfloat ptc_x, ptc_y, ptc_z;
 GLfloat rotX, rotY;
 GLfloat obsX_ini, obsY_ini, obsZ_ini;
 GLfloat rotX_ini, rotY_ini;
@@ -36,52 +37,54 @@ typedef struct {
   GLfloat transparency;
 } part;
 
-part Particles[MAX_PARTICLES];
+part Particles[MAX_PARTICLES][MAX_PARTICLES];
 
-void createParticles(int i) {
+void createParticles(int i, int j) {
   GLfloat alpha, beta;
   GLfloat radius = 0.1 * random() + 0.06;
   alpha = 2 * M_PI * random();
   beta = M_PI * random();
 
-  Particles[i].pos[0] = rand() % 8 - 4;    // posicao em x
-  Particles[i].pos[1] = 5.0;               // posicao em y
-  Particles[i].pos[2] = rand() % 2 - 2;    // posicao em z
+  Particles[i][j].pos[0] = ptc_x; // posicao em x
+  Particles[i][j].pos[1] = ptc_y; // posicao em y
+  Particles[i][j].pos[2] = ptc_z;  // posicao em z
 
-  Particles[i].vel[0] = radius * cos(alpha) * sin(beta);  // velocidade em x
-  Particles[i].vel[1] = radius * cos(beta);               // velocidade em y
-  Particles[i].vel[2] = radius * sin(alpha) * sin(beta);  // velocidade em z   
+  Particles[i][j].vel[0] = radius * cos(alpha) * sin(beta);  // velocidade em x
+  Particles[i][j].vel[1] = radius * cos(beta);               // velocidade em y
+  Particles[i][j].vel[2] = radius * sin(alpha) * sin(beta);  // velocidade em z   
 
-  Particles[i].ace[0] = 0.0;    // acelera em x
-  Particles[i].ace[1] = 0.025;  // acelera em y 
-  Particles[i].ace[2] = 0.0;    // acelera em z
+  Particles[i][j].ace[0] = 0.0;    // acelera em x
+  Particles[i][j].ace[1] = 0.025;  // acelera em y 
+  Particles[i][j].ace[2] = 0.0;    // acelera em z
 
-  Particles[i].mass = 0.01 * random();  // massa da particula
+  Particles[i][j].mass = 0.01 * random();  // massa da particula
 
-  Particles[i].color[0] = random();        // R
-  Particles[i].color[1] = 0.1 * random();    // G 
-  Particles[i].color[2] = 0.01 * random();;  // B  
+  Particles[i][j].color[0] = random();        // R
+  Particles[i][j].color[1] = 0.1 * random();    // G 
+  Particles[i][j].color[2] = 0.01 * random();;  // B  
 
-  Particles[i].timelife = 0.8 + 0.98 * random();  // define o tempo de vida da particula
-  Particles[i].transparency = 1.0;                  // grau de transaperencia da particula
+  Particles[i][j].timelife = 0.8 + 0.98 * random();  // define o tempo de vida da particula
+  Particles[i][j].transparency = 1.0;                  // grau de transaperencia da particula
 }
 
 void initParticles() {
-  int i;
+  int i, j;
 
   for (i = 0; i < MAX_PARTICLES; i++) {
-    createParticles(i);
+    for (j = 0; i < MAX_PARTICLES; i++) {
+      createParticles(i, j);
+    }
   }
 }
 
-void extinguishParticles(int i) {
-  if (Particles[i].timelife < 0.001) {
-    createParticles(i);
+void extinguishParticles(int i, int j) {
+  if (Particles[i][j].timelife < 0.001) {
+    createParticles(i, j);
   }
 }
 
 void drawParticles(void) {
-  int i;
+  int i, j;
 
   glDisable(GL_DEPTH_TEST);            //"Rastro"
   glEnable(GL_BLEND);                  //Habilita a transparencia
@@ -89,26 +92,29 @@ void drawParticles(void) {
   glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);    //Perspectiva    
 
   for (i = 0; i < MAX_PARTICLES; i++) {
-    glColor4f(Particles[i].color[0], Particles[i].color[1], Particles[i].color[2], Particles[i].transparency);
-    glPointSize(2.0);
-    glPushMatrix();
-    glBegin(GL_POINTS);
-    glVertex3f(Particles[i].pos[0], Particles[i].pos[1], Particles[i].pos[2]);
-    glEnd();
-    glPopMatrix();
+    for (j = 0; j < MAX_PARTICLES; j++) {
 
-    // calculando EDO com Euler
-    Particles[i].pos[0] += TIME_STEP * Particles[i].vel[0];
-    Particles[i].pos[1] += TIME_STEP * Particles[i].vel[1];
-    Particles[i].pos[2] += TIME_STEP * Particles[i].vel[2];
+      glColor4f(Particles[i][j].color[0], Particles[i][j].color[1], Particles[i][j].color[2], Particles[i][j].transparency);
+      glPointSize(5.0);
+      glPushMatrix();
+      glBegin(GL_POINTS);
+      glVertex3f(Particles[i][j].pos[0], Particles[i][j].pos[1], Particles[i][j].pos[2]);
+      glEnd();
+      glPopMatrix();
 
-    Particles[i].vel[0] += TIME_STEP * Particles[i].ace[0];
-    Particles[i].vel[1] += TIME_STEP * Particles[i].ace[1];
-    Particles[i].vel[2] += TIME_STEP * Particles[i].ace[2];
+      // calculando EDO com Euler
+      Particles[i][j].pos[0] += TIME_STEP * Particles[i][j].vel[0];
+      Particles[i][j].pos[1] += TIME_STEP * Particles[i][j].vel[1];
+      Particles[i][j].pos[2] += TIME_STEP * Particles[i][j].vel[2];
 
-    Particles[i].timelife -= 0.01;
-    Particles[i].transparency -= 0.01;
-    extinguishParticles(i);
+      Particles[i][j].vel[0] += TIME_STEP * Particles[i][j].ace[0];
+      Particles[i][j].vel[1] += TIME_STEP * Particles[i][j].ace[1];
+      Particles[i][j].vel[2] += TIME_STEP * Particles[i][j].ace[2];
+
+      Particles[i][j].timelife -= 0.01;
+      Particles[i][j].transparency -= 0.01;
+      extinguishParticles(i, j);
+    }
   }
 
   glDisable(GL_BLEND);

@@ -17,8 +17,8 @@ Trabalho 03 - Partículas
 #include "global.h"
 #include "transformation.h"
 #include "matrix.h"
-#include "surface.h"
 #include "particle.h"
+#include "surface.h"
 #include "window.h"
 
 int main(int argc, char** argv)

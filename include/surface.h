@@ -46,9 +46,16 @@ void getSurfacePoints(matrix* pcPatch)
         ptsPatch->values[i][j][0] += va[h][0] * vtm[h];
         ptsPatch->values[i][j][1] += va[h][1] * vtm[h];
         ptsPatch->values[i][j][2] += va[h][2] * vtm[h];
+
       }
       t += VARIATION;
+
+      ptc_x = ptsPatch->values[i][j][0];
+      ptc_y = ptsPatch->values[i][j][1];
+      ptc_z = ptsPatch->values[i][j][2];
+      createParticles(i, j);
     }
+
     s += VARIATION;
   }
 }
@@ -69,8 +76,9 @@ void createPatch(int cc)
     for (i = 0; i < ptsPatch->n; i++)
     {
       glBegin(viewType);
-      for (j = 0; j < ptsPatch->m; j++)
+      for (j = 0; j < ptsPatch->m; j++) {
         glVertex3fv(ptsPatch->values[i][j]);
+      }
       glEnd();
     }
     break;
@@ -80,16 +88,18 @@ void createPatch(int cc)
     for (i = 0; i < ptsPatch->n; i++)
     {
       glBegin(viewType);
-      for (j = 0; j < ptsPatch->m; j++)
+      for (j = 0; j < ptsPatch->m; j++) {
         glVertex3fv(ptsPatch->values[i][j]);
+      }
       glEnd();
     }
 
     for (j = 0; j < ptsPatch->n; j++)
     {
       glBegin(viewType);
-      for (i = 0; i < ptsPatch->m; i++)
+      for (i = 0; i < ptsPatch->m; i++) {
         glVertex3fv(ptsPatch->values[i][j]);
+      }
       glEnd();
     }
     break;
