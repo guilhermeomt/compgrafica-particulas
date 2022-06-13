@@ -18,7 +18,7 @@ Trabalho 03 - Partículas
 
 GLfloat ASPECTO, ANGULO;
 GLfloat obsX, obsY, obsZ;
-GLfloat ptc_x, ptc_y, ptc_z;
+GLfloat ptc_x[MAX_PARTICLES * 2], ptc_y[MAX_PARTICLES * 2], ptc_z[MAX_PARTICLES * 2];
 GLfloat rotX, rotY;
 GLfloat obsX_ini, obsY_ini, obsZ_ini;
 GLfloat rotX_ini, rotY_ini;
@@ -44,10 +44,11 @@ void createParticles(int i, int j) {
   GLfloat radius = 0.1 * random() + 0.06;
   alpha = 2 * M_PI * random();
   beta = M_PI * random();
+  int rand_index = rand() % 199 + 0;
 
-  Particles[i][j].pos[0] = ptc_x; // posicao em x
-  Particles[i][j].pos[1] = ptc_y; // posicao em y
-  Particles[i][j].pos[2] = ptc_z;  // posicao em z
+  Particles[i][j].pos[0] = ptc_x[rand_index]; // posicao em x
+  Particles[i][j].pos[1] = ptc_y[rand_index]; // posicao em y
+  Particles[i][j].pos[2] = ptc_z[rand_index];  // posicao em z
 
   Particles[i][j].vel[0] = radius * cos(alpha) * sin(beta);  // velocidade em x
   Particles[i][j].vel[1] = radius * cos(beta);               // velocidade em y
@@ -68,10 +69,10 @@ void createParticles(int i, int j) {
 }
 
 void initParticles() {
-  int i, j;
+  int i, j, k;
 
   for (i = 0; i < MAX_PARTICLES; i++) {
-    for (j = 0; i < MAX_PARTICLES; i++) {
+    for (j = 0; j < MAX_PARTICLES; j++) {
       createParticles(i, j);
     }
   }

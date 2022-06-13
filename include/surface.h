@@ -9,7 +9,7 @@ Trabalho 03 - Partículas
 
 void getSurfacePoints(matrix* pcPatch)
 {
-  int i, j, h, n, m;
+  int i, j, h, n, m, k = 0;
   float t, s;
   float tmp[4], vsm[4], vtm[4];
   f4d va[4];
@@ -50,12 +50,15 @@ void getSurfacePoints(matrix* pcPatch)
       }
       t += VARIATION;
 
-      ptc_x = ptsPatch->values[i][j][0];
-      ptc_y = ptsPatch->values[i][j][1];
-      ptc_z = ptsPatch->values[i][j][2];
-      createParticles(i, j);
+      ptc_x[k + j] = ptsPatch->values[i][j][0];
+      ptc_y[k + j] = ptsPatch->values[i][j][1];
+      ptc_z[k + j] = ptsPatch->values[i][j][2];
+
+      for (int h = 0; h < MAX_PARTICLES; h++)
+        createParticles(i, j);
     }
 
+    k += 11;
     s += VARIATION;
   }
 }
@@ -110,7 +113,6 @@ void createPatch(int cc)
     {
       for (j = 0; j < ptsPatch->m - 1; j++)
       {
-
         // criando 1o triangulo
         createTriangle(i, j, i, j + 1, i, j, cc);
 
@@ -348,5 +350,4 @@ int generatePoints()
   // espaco de matrix para um patch
   if (pcPatch) pcPatch = freeMatrix(pcPatch);
   pcPatch = allocateMatrix(4, 4);
-
 }
